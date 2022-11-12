@@ -5,6 +5,7 @@ class Director:
     """A person who directs the game. 
     
     The responsibility of a Director is to control the sequence of play.
+
     Attributes:
         card ([Card]): One instance of the Card class.
         second_card ([Card]): One instance of the Card class.
@@ -41,6 +42,7 @@ class Director:
 
     def get_inputs(self):
         """Ask the user to guess the value of the next card.
+
         Args:
             self (Director): An instance of Director.
         """
@@ -54,6 +56,7 @@ class Director:
        
     def do_updates(self):
         """Check the players input, then updates the player's score.
+
         Args:
             self (Director): An instance of Director.
         """
@@ -76,6 +79,7 @@ class Director:
 
     def do_outputs(self):
         """Displays the new score and ask the player if they want to play again.
+        
         Args:
             self (Director): An instance of Director.
         """        
