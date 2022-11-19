@@ -1,33 +1,75 @@
-# TODO: Implement the Seeker class as follows...
-
-# 1) Add the class declaration. Use the following class comment.
-
-    """The person looking for the Hider. 
-    
-    The responsibility of a Seeker is to keep track of its location and distance travelled.
-    
-    Attributes:
-        location (int): The location of the Seeker (1-1000).
+class Jumper:
     """
+    this is the class of the Jumper, where the player seeks to solve a puzzle by guessing the letters of a secret word one at a time
+    Attributes:    
+        _jumper (list): the parts of the little man.
 
-# 2) Create the class constructor. Use the following method comment.
-        """Constructs a new Seeker.
+
+    """
+    
+    def __init__(self):
+        """ 
+        Constructs a new Jumper 
+        
+        Args:
+            self (Jumper): creates a new instance of the class Jumper
+
+        """
+        
+        
+        self._jumper = [    
+            '     ___     ',
+            '    /___\    ',
+            '    \   /    ',
+            '     \ /     ',
+            '      O      ',
+            '     /|\     ',
+            '     / \     ',
+            '             ',
+            '   ^^^^^^^   ' 
+        ]  
+        self._boolean_value = True  # this is the boolean value that allows says the man to be alive
+
+
+    def take_life(self):
+        """ 
+        Deletes the first letter from the list jumper parameter: 
+        Args:
+            self (Jumper): An instance of Jumper
+        """
+
+        self._jumper.pop(0)  # each time the take_life() is called it pops the first element of the list
+        if len(self._jumper) == 5:     # conditional if the little man doesn't have any rope
+            self._jumper[0] = '     x_x      '   # and add the cross in the head... 
+            self._boolean_value = False   #  Remember the boolean value...? here is the response if the list has only four left
+
+    def get_jumper(self):
+        """
+        Simply returns the list of the jumper to 
+        make it print in with the display class methods
 
         Args:
-            self (Seeker): An instance of Seeker.
-        """
-       
-# 3) Create the get_location(self) method. Use the following method comment.
-        """Gets the current location.
-        
+            self (Jumper): An instance of Jumper
+
         Returns:
-            number: The current location,
+            list: The list of the draw of the little man
         """
-        
-# 4) Create the move_location(self, location) method. Use the following method comment.
-        """Moves to the given location.
 
-        Args:
-            self (Seeker): An instance of Seeker.
-            location (int): The given location.
+        return self._jumper   
+
+
+    def is_alive(self):
         """
+        verify the jumper
+        Args:
+            self (Jumper): An instance of Jumper
+
+        Returns:
+            boolean: the value true if there is a certain amount of items in the list
+
+        """
+        # verify the jumper through a simple boolean
+        does_live = self._boolean_value
+        return does_live      
+
+

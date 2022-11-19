@@ -1,7 +1,6 @@
-from game.terminal_service import TerminalService
-from game.hider import Hider
-from game.seeker import Seeker
-
+from game.jumper import Jumper
+from game.word import Word
+from game.printer import Printer
 
 class Director:
     """A person who directs the game. 
@@ -9,58 +8,62 @@ class Director:
     The responsibility of a Director is to control the sequence of play.
 
     Attributes:
-        hider (Hider): The game's hider.
-        is_playing (boolean): Whether or not to keep playing.
-        seeker (Seeker): The game's seeker.
-        terminal_service: For getting and displaying information on the terminal.
+        _jumper ([Jumper]): One instance of the Jumper class.
+        _word ([Word]): One instance of the Word class.
+        _printer (boolean): One instance of the Printer class.
     """
-
+    
     def __init__(self):
         """Constructs a new Director.
         
         Args:
             self (Director): an instance of Director.
         """
-        self._hider = Hider()
-        self._is_playing = True
-        self._seeker = Seeker()
-        self._terminal_service = TerminalService()
-        
+        self._jumper = Jumper()
+        self._word = Word()
+        self._display = Printer()
+        self._user_letter = ''
+        self._ran_word = self._word.get_random_word().lower()
+        self._guessed_letters = ''
+        self._is_alive = True
+
     def start_game(self):
         """Starts the game by running the main game loop.
         
         Args:
             self (Director): an instance of Director.
         """
-        while self._is_playing:
-            self._get_inputs()
-            self._do_updates()
+        self._do_outputs()
+        while self._is_alive:
+            self._do_inputs()
+            self._do_updates()  
             self._do_outputs()
 
-    def _get_inputs(self):
-        """Moves the seeker to a new location.
-
-        Args:
-            self (Director): An instance of Director.
-        """
-        new_location = self._terminal_service.read_number("\nEnter a location [1-1000]: ")
-        self._seeker.move_location(new_location)
-        
     def _do_updates(self):
-        """Keeps watch on where the seeker is moving.
+        """Ask the user to guess the letter of the word.
 
         Args:
             self (Director): An instance of Director.
         """
-        self._hider.watch_seeker(self._seeker)
-        
+        if self._user_letter.lower() in self._ran_word:
+            # User guesses the letter and that is added to the _guessed_letters string
+            for i in self._ran_word:
+                if i == self._user_letter:
+                    self._guessed_letters += self._user_letter
+        else:
+            # User missed that letter, a life is taken from the jumper
+            self._jumper.take_life()
+
+        if sorted(self._ran_word) == sorted(self._guessed_letters):
+            # Player guesses the entire word, wons the game
+            self._is_alive = False
+        if not self._jumper.is_alive():
+            # If the jumper is dead the game ends. Player losses
+            self._is_alive = False        
+
     def _do_outputs(self):
-        """Provides a hint for the seeker to use.
+        self._display.print_word_so_far(self._ran_word, self._guessed_letters)
+        self._display.print_jumper(self._jumper.get_jumper())
 
-        Args:
-            self (Director): An instance of Director.
-        """
-        hint = self._hider.get_hint()
-        self._terminal_service.write_text(hint)
-        if self._hider.is_found():
-            self._is_playing = False
+    def _do_inputs(self):
+        self._user_letter = self._display.get_letter("Guess a letter [a-z]: ")
